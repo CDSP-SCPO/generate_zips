@@ -31,6 +31,10 @@ if __name__ == '__main__' :
 		print 'Correct usage : python ' + sys.argv[0] + ' "path/to/folder/to/zip"'
 		print 'The first argument is mandatory and is the path to the folder to zip'
 	else :
-		zipf = zipfile.ZipFile('python.zip', 'w')
-		zipdir(sys.argv[1], zipf)
-		zipf.close()
+		zf = zipfile.ZipFile('python.zip', mode='w', allowZip64=1)
+		try :
+			print 'adding archive folder'
+			zf.write(sys.argv[1])
+		finally :
+			print 'closing'
+			zf.close()

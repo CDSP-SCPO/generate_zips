@@ -18,7 +18,7 @@ The survey folder has to contain "add", "xxx-dl" and "xxx-ol" subfolders.
 
 ## What is the output ?
 
-The ouput is a classification tree based on the files' name. The tree format will be JSON, CSV and TXT.
+The output are 2
 
 
 ## Credits
