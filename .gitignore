@@ -2,3 +2,13 @@
 # Mac files
 # 
 .DS_Store
+
+#
+# Log folder
+#
+log
+
+#
+# Zip files
+# 
+*.zip
