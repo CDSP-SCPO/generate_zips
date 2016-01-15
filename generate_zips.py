@@ -4,6 +4,8 @@
 
 import os, sys, zipfile, zlib
 
+zip_folder_name = 'sp5-ol.zip'
+
 def zipdir(path, ziph) :
 	# ziph is zipfile handle
 	for root, dirs, files in os.walk(path) :
@@ -17,8 +19,8 @@ if __name__ == '__main__' :
 		print 'Correct usage : python ' + sys.argv[0] + ' "path/to/folder/to/zip"'
 		print 'The first argument is mandatory and is the path to the folder to zip'
 	else :
-		zf = zipfile.ZipFile('sp5-ol.zip', mode='w', compression=zipfile.ZIP_DEFLATED, allowZip64=1)
+		zf = zipfile.ZipFile(zip_folder_name, mode='w', compression=zipfile.ZIP_DEFLATED, allowZip64=1)
 		print 'Adding archive folder'
 		zipdir(sys.argv[1], zf)
-		print 'Closing'
+		print 'Folder zipped into file : ' + zip_folder_name
 		zf.close()
