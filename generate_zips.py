@@ -10,7 +10,6 @@ import csv, logging, os, sys, zipfile, zlib
 #
 # Config
 #
-path_separator = '/'
 log_folder = 'log'
 log_level = logging.DEBUG
 ignored_extensions = ['jp2', 'j2k', 'jpf', 'jpx', 'jpm', 'mj2']
@@ -21,19 +20,25 @@ ignored_files = ['.DS_Store']
 # Functions
 #
 
-def is_transcr_file(file, extension) :
-	# A file is a TEI if its extension is "xml" and the file name contains "_transcr_"
-	if extension.lower() == 'xml' and '_transcr_' in file :
-		return True
-	else :
-		return False
+# A file is a classification plan file if its name is "planclassement.pdf"
+def is_classification_file(file) :
+	return file == 'planclassement.pdf'
 
+# A file is a transcription file if its name contains "_transcr_"
+def is_transcr_file(file) :
+	return '_transcr_' in file
+
+# A file is an inventory if its file name contains "_add_archives_inventaire"
 def is_inventory_file(file) :
-	# A file is an inventory if its file name contains "_add_archives_inventaire"
-	if '_add_archives_inventaire' in file :
-		return True
-	else :
-		return False
+	return '_add_archives_inventaire' in file
+
+# A file is an "enquête sur l'enquête" file if it is into folder "add/ese" and its extension is ".mp3", ".xml" or ".pdf"
+def is_ese_file(root, extension) :
+	return os.path.join('add', 'ese') in root and extension.lower() in ['mp3', 'xml', 'pdf']
+
+# A file is a meta file if its name is "meta_documents.csv" or "meta_speakers.csv"
+def is_meta_file(file) :
+	return file in ['meta_documents.csv', 'meta_speakers.csv']
 
 def add_file_to_archive(zf, root, path, file) :
 	zf.write(os.path.join(root, file), os.path.join(root.replace(path, ''), file))
@@ -47,25 +52,28 @@ def zipdir(path, zf_ol, zf_dl) :
 			file_without_extension = file.split('.')[0]
 			# Ignore all the JPEG2000 files
 			if not extension in ignored_extensions and not file in ignored_files :
-				# Add TEI files into "online" archive folder only (not into "download" archive folder)
-				if is_transcr_file(file, extension) :
-					add_file_to_archive(zf_ol, root, path, file)
+				# Transcription file
+				if is_transcr_file(file) :
+					if extension.lower() in ['odt', 'pdf'] :
+						add_file_to_archive(zf_dl, root, path, file)
+					elif extension.lower() in ['xml'] :
+						add_file_to_archive(zf_ol, root, path, file)
 				# For other files, check into the inventory file
+				elif file_without_extension in recordsbyid.keys() :
+					if recordsbyid[file_without_extension][21] != '' :
+						add_file_to_archive(zf_dl, root, path, file)
+					if recordsbyid[file_without_extension][22] != '' :
+						add_file_to_archive(zf_ol, root, path, file)
+				# If file is an inventory, classification or "enquête sur l'enquête", add it to "donwload" and "online" archive folder
+				elif is_inventory_file(file) and is_classification_file(file) and is_ese_file(root, extension) :
+					add_file_to_archive(zf_dl, root, path, file)
+					add_file_to_archive(zf_ol, root, path, file)
+				# If file is a meta file, add it to "online" archive folder
+				elif is_meta_file(file) :
+					add_file_to_archive(zf_ol, root, path, file)
+				# Else do nothing
 				else :
-					if file_without_extension in recordsbyid.keys() :
-						if recordsbyid[file_without_extension][21] != '' :
-							add_file_to_archive(zf_dl, root, path, file)
-						if recordsbyid[file_without_extension][22] != '' :
-							add_file_to_archive(zf_ol, root, path, file)
-					else :
-						# If file is an inventory, add it to "donwload" and "online" archive folder
-						if is_inventory_file(file) :
-							add_file_to_archive(zf_dl, root, path, file)
-							add_file_to_archive(zf_ol, root, path, file)
-						elif 
-						# Else do nothing
-						else :
-							logging.info('#ignored : file not added into online folder neither into download folder : ' + file)
+					logging.info('#ignored : file not added into "online" archive folder neither into "download" archive folder : ' + file)
 
 #
 # Main
@@ -87,7 +95,8 @@ if __name__ == '__main__' :
 		zip_online_folder_name = survey_name + '-ol.zip'
 		zip_download_folder_name = survey_name + '-dl.zip'
 		# Create log file
-		log_file = log_folder + path_separator + sys.argv[0].replace('.py', '.log')
+		# log_file = log_folder + path_separator + sys.argv[0].replace('.py', '.log')
+		log_file = os.path.join(log_folder, sys.argv[0].replace('.py', '.log'))
 		logging.basicConfig(filename = log_file, filemode = 'w', format = '%(asctime)s  |  %(levelname)s  |  %(message)s', datefmt = '%m/%d/%Y %I:%M:%S %p', level = log_level)
 		logging.info('Start')
 		# Parse inventory file
