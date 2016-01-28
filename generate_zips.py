@@ -21,7 +21,7 @@ ignored_files = ['.DS_Store']
 # Functions
 #
 
-def is_tei_file(file, extension) :
+def is_transcr_file(file, extension) :
 	# A file is a TEI if its extension is "xml" and the file name contains "_transcr_"
 	if extension.lower() == 'xml' and '_transcr_' in file :
 		return True
@@ -48,7 +48,7 @@ def zipdir(path, zf_ol, zf_dl) :
 			# Ignore all the JPEG2000 files
 			if not extension in ignored_extensions and not file in ignored_files :
 				# Add TEI files into "online" archive folder only (not into "download" archive folder)
-				if is_tei_file(file, extension) :
+				if is_transcr_file(file, extension) :
 					add_file_to_archive(zf_ol, root, path, file)
 				# For other files, check into the inventory file
 				else :
@@ -59,10 +59,10 @@ def zipdir(path, zf_ol, zf_dl) :
 							add_file_to_archive(zf_ol, root, path, file)
 					else :
 						# If file is an inventory, add it to "donwload" and "online" archive folder
-						# Else do nothing
 						if is_inventory_file(file) :
 							add_file_to_archive(zf_dl, root, path, file)
 							add_file_to_archive(zf_ol, root, path, file)
+						elif 
 						# Else do nothing
 						else :
 							logging.info('#ignored : file not added into online folder neither into download folder : ' + file)
