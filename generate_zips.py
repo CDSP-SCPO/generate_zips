@@ -54,15 +54,11 @@ def zipdir(path, zf_ol, zf_dl) :
 			if not extension in ignored_extensions and not file in ignored_files :
 				# Transcription file
 				if is_transcr_file(file) :
+					# Add ODT and PDF transcription files into "download" archive folder
 					if extension.lower() in ['odt', 'pdf'] :
 						add_file_to_archive(zf_dl, root, path, file)
+					# Add XML transcription files into "online" archive folder
 					elif extension.lower() in ['xml'] :
-						add_file_to_archive(zf_ol, root, path, file)
-				# For other files, check into the inventory file
-				elif file_without_extension in recordsbyid.keys() :
-					if recordsbyid[file_without_extension][21] != '' :
-						add_file_to_archive(zf_dl, root, path, file)
-					if recordsbyid[file_without_extension][22] != '' :
 						add_file_to_archive(zf_ol, root, path, file)
 				# If file is an inventory, classification or "enquête sur l'enquête", add it to "donwload" and "online" archive folder
 				elif is_inventory_file(file) and is_classification_file(file) and is_ese_file(root, extension) :
@@ -71,6 +67,12 @@ def zipdir(path, zf_ol, zf_dl) :
 				# If file is a meta file, add it to "online" archive folder
 				elif is_meta_file(file) :
 					add_file_to_archive(zf_ol, root, path, file)
+				# For other files, check into the inventory file
+				elif file_without_extension in recordsbyid.keys() :
+					if recordsbyid[file_without_extension][21] != '' :
+						add_file_to_archive(zf_dl, root, path, file)
+					if recordsbyid[file_without_extension][22] != '' :
+						add_file_to_archive(zf_ol, root, path, file)
 				# Else do nothing
 				else :
 					logging.info('#ignored : file not added into "online" archive folder neither into "download" archive folder : ' + file)
