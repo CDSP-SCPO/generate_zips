@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Execution example : python script.py "path/to/folder/to/convert" "path/to/matching/file"
+# Execution example : python script.py "path/to/folder/to/convert" "path/to/conf/file"
 
 #
 # Libs
