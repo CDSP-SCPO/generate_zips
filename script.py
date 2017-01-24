@@ -6,6 +6,7 @@
 # Libs
 #
 
+import json
 import logging
 import os
 import sys
@@ -29,8 +30,21 @@ def convertFolder() :
 	# Init logs
 	logging.basicConfig(filename=log_file, filemode='a+', format='%(asctime)s  |  %(levelname)s  |  %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=log_level)
 	logging.info('Start script')
-	# TODO load conf file
+	# Load conf file
+	with open(sys.argv[2]) as conf_file :
+		conf = json.load(conf_file)
+	# Create CINES folder
+	cines_folder = 'CINES'
+	if not os.path.exists(cines_folder) :
+		os.makedirs(cines_folder)
+	for root, dirs, files in os.walk(sys.argv[1]) :
+		print ''
+		print root
+		print dirs
+		print files
+		# TODO : Check if one of conf.keys() in contains in root.replace(sys.argv[1], '') and the extension file is in conf["SOMETHING"]
 	sys.exit()
+
 
 #
 # Main
