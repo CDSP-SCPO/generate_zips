@@ -9,6 +9,7 @@
 import json
 import logging
 import os
+import shutil
 import sys
 
 
@@ -35,15 +36,20 @@ def convertFolder() :
 		conf = json.load(conf_file)
 	# Create CINES folder
 	cines_folder = 'CINES'
+	# Create remote folder
 	if not os.path.exists(cines_folder) :
 		os.makedirs(cines_folder)
 	for root, dirs, files in os.walk(sys.argv[1]) :
-		print ''
-		print root
-		print dirs
-		print files
-		# TODO : Check if one of conf.keys() in contains in root.replace(sys.argv[1], '') and the extension file is in conf["SOMETHING"]
-	sys.exit()
+		# If file extension is
+		if root.replace(sys.argv[1], '') in conf.keys() :
+			for file in files :
+				if file.split('.')[-1] in conf[root.replace(sys.argv[1], '')] :
+					distdir = os.path.join(cines_folder, root.replace(sys.argv[1], ''))
+					if not os.path.exists(distdir) :
+						logging.info('Create folder : ' + distdir)
+						os.makedirs(distdir)
+					logging.info('Copy file : ' + file)
+					shutil.copy(os.path.join(root, file), distdir)
 
 
 #
