@@ -1,0 +1,4 @@
+{
+	"path/to/sub/folder/01" : ["pdf", "jpeg"],
+	"path/to/sub/folder/02" : ["csv", "xls"]
+}
