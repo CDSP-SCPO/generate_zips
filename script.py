@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Execution example : python script.py "path/to/folder/to/convert" "path/to/conf/file"
+# Execution example : python script.py "path/to/folder/to/filter" "path/to/conf/file"
 
 #
 # Libs
@@ -25,7 +25,13 @@ log_level = logging.DEBUG
 # Functions
 #
 
-def convertFolder() :
+def checkFolderWithConf(folder, conf) :
+	for key in conf.keys() :
+		if key in folder.replace(sys.argv[1], '') :
+			return key
+	return False
+
+def filterFolder() :
 	# Generate log file path
 	log_file = os.path.join(log_folder, sys.argv[0].replace('.py', '.log'))
 	# Init logs
@@ -40,16 +46,18 @@ def convertFolder() :
 	if not os.path.exists(cines_folder) :
 		os.makedirs(cines_folder)
 	for root, dirs, files in os.walk(sys.argv[1]) :
-		# If file extension is
-		if root.replace(sys.argv[1], '') in conf.keys() :
+		# Check if current folder is listed in the conf
+		rank = checkFolderWithConf(root, conf)
+		if rank :
 			for file in files :
-				if file.split('.')[-1] in conf[root.replace(sys.argv[1], '')] :
+				if file.split('.')[-1] in conf[rank] :
 					distdir = os.path.join(cines_folder, root.replace(sys.argv[1], ''))
 					if not os.path.exists(distdir) :
 						logging.info('Create folder : ' + distdir)
 						os.makedirs(distdir)
 					logging.info('Copy file : ' + file)
 					shutil.copy(os.path.join(root, file), distdir)
+	logging.info('End script')
 
 
 #
@@ -65,4 +73,4 @@ if __name__ == '__main__' :
 		print 'The first argument is mandatory and is the path to the folder to convert'
 		print 'The second argument is mandatory and is the path to the JSON config file'
 	else :
-		convertFolder()
+		filterFolder()
