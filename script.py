@@ -27,7 +27,8 @@ log_level = logging.DEBUG
 
 def checkFolderWithConf(folder, conf) :
 	for key in conf.keys() :
-		if key in folder.replace(sys.argv[1], '') :
+		relative_path = unicode(folder, "utf8").replace(sys.argv[1], '')
+		if relative_path.startswith(key) :
 			return key
 	return False
 
