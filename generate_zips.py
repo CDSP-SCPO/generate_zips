@@ -26,7 +26,7 @@ def is_classification_file(file) :
 
 # A file is a transcription file if its name contains "_transcr_"
 def is_transcr_file(file) :
-	return '_transcr_' in file
+	return any(x in file for x in ['_transcr_', '_trans_'])
 
 # A file is an inventory if its file name contains "_add_archives_inventaire"
 def is_inventory_file(file) :
