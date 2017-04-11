@@ -22,9 +22,26 @@ generate_zips can be used with any system compatible with python 2.7 by invoking
 
 The output are 2 archive folders.
 
-One is to upload for the website (_survey\_name_-on.zip).
+One is to upload for the website (_survey\_name_-ol.zip).
 
 The other one is to be available on the website to let the user download the dataset (_survey\_name_-dl.zip).
+
+## How are these folders generated ?
+
+The _survey\_name_-ol.zip contains :
+* The transcription file into XML
+* The inventory file
+* The classification tree file
+* The "enquête sur l'enquête" files
+* The meta files ('meta_documents.csv', 'meta_speakers.csv')
+* Others files as setted into the inventory file
+
+The _survey\_name_-dl.zip contains :
+* The transcription file into ODT and PDF
+* The inventory file
+* The classification tree file
+* The "enquête sur l'enquête" files
+* Others files as setted into the inventory file
 
 
 ## Credits
