@@ -61,7 +61,7 @@ def zipdir(path, zf_ol, zf_dl) :
 					elif extension.lower() in ['xml'] :
 						add_file_to_archive(zf_ol, root, path, file)
 				# If file is an inventory, classification or "enquête sur l'enquête", add it to "donwload" and "online" archive folder
-				elif is_inventory_file(file) and is_classification_file(file) and is_ese_file(root, extension) :
+				elif is_inventory_file(file) or is_classification_file(file) or is_ese_file(root, extension) :
 					add_file_to_archive(zf_dl, root, path, file)
 					add_file_to_archive(zf_ol, root, path, file)
 				# If file is a meta file, add it to "online" archive folder
