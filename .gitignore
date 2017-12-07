@@ -12,3 +12,8 @@ log
 # Zip files
 # 
 *.zip
+
+#
+# Conf files
+# 
+conf
